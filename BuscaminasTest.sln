@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuscaminasTest.WASM", "BuscaminasTest.WASM\BuscaminasTest.WASM.csproj", "{27C0A52F-5B6C-4F68-BDEC-08B955ABB6C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuscaMinas.Models", "BuscaMinas.Models\BuscaMinas.Models.csproj", "{B0DCE301-402C-4B3A-B700-5274AA7E71D8}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Buscaminas.Db", "Buscaminas.Db\Buscaminas.Db.sqlproj", "{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27C0A52F-5B6C-4F68-BDEC-08B955ABB6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27C0A52F-5B6C-4F68-BDEC-08B955ABB6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C0A52F-5B6C-4F68-BDEC-08B955ABB6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27C0A52F-5B6C-4F68-BDEC-08B955ABB6C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0DCE301-402C-4B3A-B700-5274AA7E71D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0DCE301-402C-4B3A-B700-5274AA7E71D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0DCE301-402C-4B3A-B700-5274AA7E71D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0DCE301-402C-4B3A-B700-5274AA7E71D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22BC5E21-42DA-43E2-A7AA-4F3ECB652B09}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D564B455-E4AD-41CF-B62B-9EE29FB1AE7D}
+	EndGlobalSection
+EndGlobal
