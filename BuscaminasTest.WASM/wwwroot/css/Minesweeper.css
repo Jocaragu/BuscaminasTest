@@ -1,4 +1,4 @@
-﻿/*.minesweeper-game div {
+﻿.minesweeper-game div {
     line-height: 0;
     font-size: 0;
     float: left;
@@ -13,26 +13,26 @@
 .minesweeper-medium {
     width: 276px;
     height: 318px;
-}*/
+}
 
 .minesweeper-board div {
-    background-image: url(../images/MinesweeperSprites.png);
+    background-image: url(../images/minesweeper-sprites.png);
 }
 
 .minesweeper-gamepiece {
-    min-width: 10mm;
-    min-height: 10mm;
-    max-width: 10mm;
-    max-height: 10mm;
+    min-width: 1cm;
+    min-height: 1cm;
+    max-width: 1cm;
+    max-height: 1cm;
     font-size: 0px;
 }
 
-/*.minesweeper-unrevealed {
-    background-position: 0px -39px;
+.minesweeper-unrevealed {
+    background-position: -1cm -0px;
 }
 
 .minesweeper-flagged {
-    background-position: -16px -39px;
+    background-position: -1cm -1cm;
 }
 
 .minesweeper-mine {
@@ -78,177 +78,3 @@
 .minesweeper-8 {
     background-position: -128px -23px;
 }
-
-.minesweeper-border-jointleft {
-    background-position: -56px -81px;
-    width: 10px;
-    height: 10px
-}
-
-.minesweeper-border-jointright {
-    background-position: -66px -81px;
-    width: 10px;
-    height: 10px
-}
-
-.minesweeper-border-horizontal {
-    background-position: -40px -81px;
-    width: 16px;
-    height: 10px;
-}
-
-.minesweeper-border-vertical {
-    background-position: -134px -39px;
-    width: 10px;
-    height: 16px;
-}
-
-.minesweeper-border-vertical-long {
-    background-position: -134px -39px;
-    width: 10px;
-    height: 32px;
-}
-
-.minesweeper-border-bottomleft {
-    background-position: -20px -81px;
-    width: 10px;
-    height: 10px;
-}
-
-.minesweeper-border-bottomright {
-    background-position: -30px -81px;
-    width: 10px;
-    height: 10px;
-}
-
-.minesweeper-border-topleft {
-    background-position: 0px -81px;
-    width: 10px;
-    height: 10px;
-}
-
-.minesweeper-border-topright {
-    background-position: -10px -81px;
-    width: 10px;
-    height: 10px;
-}
-
-.minesweeper-time-0 {
-    background-position: 0 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-1 {
-    background-position: -13px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-2 {
-    background-position: -26px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-3 {
-    background-position: -39px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-4 {
-    background-position: -52px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-5 {
-    background-position: -65px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-6 {
-    background-position: -78px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-7 {
-    background-position: -91px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-8 {
-    background-position: -104px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-9 {
-    background-position: -117px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-time-blank {
-    background-position: -130px 0;
-    width: 13px;
-    height: 23px;
-}
-
-.minesweeper-board #mines_hundreds {
-    margin: 4px 0 5px 6px;
-}
-
-.minesweeper-board #mines_tens {
-    margin: 4px 0 5px 0px;
-}
-
-.minesweeper-board #mines_ones {
-    margin: 4px 0 5px 0px;
-}
-
-.minesweeper-board #seconds_hundreds {
-    margin: 4px 0 5px 0;
-}
-
-.minesweeper-board #seconds_tens {
-    margin: 4px 0 5px 0;
-}
-
-.minesweeper-board #seconds_ones {
-    margin: 4px 6px 5px 0;
-}
-
-.minesweeper-board #face {
-    margin-top: 3px;
-    margin-bottom: 3px;
-}
-
-.minesweeper-board .minesweeper-face-smile {
-    background-position: 0px -55px;
-    width: 26px;
-    height: 26px;
-}
-
-.minesweeper-board .minesweeper-face-dead {
-    background-position: -78px -55px;
-    width: 26px;
-    height: 26px;
-}
-
-.minesweeper-board .minesweeper-face-oooh {
-    background-position: -52px -55px;
-    width: 26px;
-    height: 26px;
-}
-
-.minesweeper-board .minesweeper-face-win {
-    background-position: -104px -55px;
-    width: 26px;
-    height: 26px;
-}
-*/

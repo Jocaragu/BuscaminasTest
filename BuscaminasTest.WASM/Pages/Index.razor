@@ -1,7 +1,18 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<div class="minesweeper-game" style="width:3cm;height:5">
+	<div class="minesweeper-board">
+		@for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				<div class="minesweeper-gamepiece minesweeper-unrevealed"></div>
+			}
+		}
+	</div>
+</div>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@code {
+	private int width = 3;
+	private int height = 5;
+}
