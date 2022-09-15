@@ -1,8 +1,8 @@
-﻿@page "/"
+﻿@page "/TestGame"
 
-<PageTitle>Game</PageTitle>
+<PageTitle>TestGame</PageTitle>
 
-<div @onmousedown="e => holding=true" @onmouseup="e => holding=false" @onmouseover="e=>focused=true" @onmouseout="e=>focused=false" oncontextmenu="return false;"	>
+<div @onmousedown="e => holding=true" @onmouseup="e => holding=false" @onmouseover="e=>focused=true" @onmouseout="e=>focused=false" oncontextmenu="return false;">
 	<button class="btn-success" @onclick=Reset>Reset</button>
 	<p></p>
 	<div class="minesweeper-game" style="width:3cm;height:3cm">

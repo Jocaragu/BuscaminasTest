@@ -19,4 +19,8 @@
     <Folder Include="RazorComponents\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BuscaMinas.Models\BuscaMinas.Models.csproj" />
+  </ItemGroup>
+
 </Project>

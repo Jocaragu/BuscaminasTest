@@ -1,0 +1,71 @@
+﻿@page "/"
+
+<button class="btn-success" @onclick=Debugging>Check Stuff</button>
+<p>
+	@if(firstClick)
+	{
+		<div>First Click Done</div>
+	}
+</p>
+<div oncontextmenu="return false;">
+	<div class="minesweeper-game" style="@Size()">
+		<div class="minesweeper-board" style="@Size()" @onclick="FirstClick">
+			@foreach (var cell in currentGame.GameBoard.BoardCells)
+			{
+				if(cell.Revealed)
+				{
+					if(cell.Mined)
+					{
+						<div class="cell mine-detonated"></div>
+					}
+					else
+					{
+						<div class="cell mines-nearby-(@cell.NearbyMines)"></div>
+					}
+				}
+				else
+				{
+					if(cell.Flagged)
+					{
+						<div class="cell flagged" @oncontextmenu="cell.RightClick"></div>
+					}
+					else
+					{
+						<div class="cell unrevealed" @onclick="cell.LeftClick" @oncontextmenu="cell.RightClick"></div>
+					}
+				}
+			}
+		</div>
+	</div>
+</div>
+
+
+@code {
+	private int gameWidth = 5;
+	private int gameHeight = 5;
+	private bool firstClick = false;
+
+	private Game currentGame;
+
+	public NewGame()
+	{
+		currentGame = new(gameWidth, gameHeight);
+	}
+
+	private string Size()
+	{
+		string gameStyle = $"width:{gameWidth}cm; height:{gameHeight}cm";
+		return gameStyle;
+	}
+
+	private void Debugging()
+	{
+		var a = currentGame.GameBoard.BoardCells;
+
+		var STOP = "STOP";
+	}
+	private void FirstClick()
+	{
+		firstClick = true;
+	}
+}
