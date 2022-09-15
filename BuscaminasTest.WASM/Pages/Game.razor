@@ -1,0 +1,98 @@
+﻿@page "/"
+
+<PageTitle>Game</PageTitle>
+
+<div @onmousedown="e => holding=true" @onmouseup="e => holding=false" @onmouseover="e=>focused=true" @onmouseout="e=>focused=false" oncontextmenu="return false;"	>
+	<button class="btn-success" @onclick=Reset>Reset</button>
+	<p></p>
+	<div class="minesweeper-game" style="width:3cm;height:3cm">
+		<div class="minesweeper-board"  style="height:3cm;width:3cm">
+			@if (revealed)
+			{
+				<div class="cell mine-detonated"></div>
+			}
+			else
+			{
+				if(flagged)
+				{
+					<div class="cell flagged" @oncontextmenu="Question"></div>
+				}
+				else if(questioned && !pressing)
+				{
+					<div class="cell questioned" @onmousedown="Press" @onmouseover="RePress" @oncontextmenu="Clear"></div>
+				}
+				else if (questioned && pressing)
+				{
+					<div class="cell questioned-pressed" @onmouseup="Clear" @onmouseout="e => pressing=false"></div>
+				}
+				else if(pressing)
+				{
+					<div class="cell pressed" @onmouseup="Step" @onmouseout="e => pressing=false"></div>
+				}
+				else
+				{
+					<div class="cell unrevealed" @onmousedown="Press" @onmouseover="RePress" @oncontextmenu="Flag"></div>
+				}
+			}
+		</div>
+	</div>
+</div>
+
+@code {
+	private bool revealed = false;
+	private bool flagged = false;
+	private bool questioned = false;
+	private bool pressing = false;
+	private bool holding = false;
+	private bool focused = false;
+
+	private void Press(MouseEventArgs e)
+	{
+		if(e.Button == 0)
+		{
+			pressing = true;
+		}
+	}
+
+	private void Step(MouseEventArgs e)
+	{
+		if (e.Button == 0)
+		{
+			pressing = false;
+			revealed = true;
+		}
+	}
+
+	private void RePress()
+	{
+		if(holding)
+		{
+			pressing = true;
+		}
+	}
+
+	private void Flag()
+	{
+		flagged = true;
+	}
+
+	private void Question()
+	{
+		flagged = false;
+		questioned = true;
+	}
+
+	private void Clear()
+	{
+		questioned = false;
+		pressing = false;
+	}
+
+	private void Reset()
+	{
+		revealed = false;
+		flagged = false;
+		questioned = false;
+		pressing = false;
+	}
+}

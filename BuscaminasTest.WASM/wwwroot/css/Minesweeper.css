@@ -10,16 +10,11 @@
     background-color: silver;
 }
 
-.minesweeper-medium {
-    width: 276px;
-    height: 318px;
-}
-
 .minesweeper-board div {
     background-image: url(../images/minesweeper-sprites.png);
 }
 
-.minesweeper-gamepiece {
+.cell {
     min-width: 1cm;
     min-height: 1cm;
     max-width: 1cm;
@@ -27,54 +22,75 @@
     font-size: 0px;
 }
 
-.minesweeper-unrevealed {
-    background-position: -1cm -0px;
+.empty{
+    background-position: 0cm 0cm
 }
 
-.minesweeper-flagged {
+.pressed {
+    background-position: 0cm 0cm
+}
+
+.unrevealed {
+    background-position: -1cm 0cm;
+}
+
+.flagged {
+    background-position: -2cm 0cm;
+}
+
+.mine-detonated {
+    background-position: -3cm 0cm;
+}
+
+.mine-misflagged {
+    background-position: -4cm 0cm;
+}
+
+.mine-missed {
+    background-position: -5cm 0cm;
+}
+
+
+.questioned {
+    background-position: -6cm 0cm;
+}
+
+.questioned-pressed {
+    background-position: -7cm 0cm;
+}
+
+.mines-nearby-0 {
+    background-position: 0cm -0cm;
+}
+
+.mines-nearby-1 {
+    background-position: -0cm -1cm;
+}
+
+.mines-nearby-2 {
     background-position: -1cm -1cm;
 }
 
-.minesweeper-mine {
-    background-position: -64px -39px;
+.mines-nearby-3 {
+    background-position: -2cm -1cm;
 }
 
-.minesweeper-mine-smiley {
-    background-image: url("../smiley-small.png");
+.mines-nearby-4 {
+    background-position: -3cm -1cm;
 }
 
-.minesweeper-0 {
-    background-position: 0px -23px;
+.mines-nearby-5 {
+    background-position: -4cm -1cm;
 }
 
-.minesweeper-1 {
-    background-position: -16px -23px;
+.mines-nearby-6 {
+    background-position: -5cm -1cm;
 }
 
-.minesweeper-2 {
-    background-position: -32px -23px;
+.mines-nearby-7 {
+    background-position: -6cm -1cm;
 }
 
-.minesweeper-3 {
-    background-position: -48px -23px;
-}
-
-.minesweeper-4 {
-    background-position: -64px -23px;
-}
-
-.minesweeper-5 {
-    background-position: -80px -23px;
-}
-
-.minesweeper-6 {
-    background-position: -96px -23px;
-}
-
-.minesweeper-7 {
-    background-position: -112px -23px;
-}
-
-.minesweeper-8 {
-    background-position: -128px -23px;
+.mines-nearby-8 {
+    background-position: -7cm -1cm;
 }
