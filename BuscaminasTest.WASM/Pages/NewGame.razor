@@ -1,71 +1,105 @@
 ﻿@page "/"
 
-<button class="btn-success" @onclick=Debugging>Check Stuff</button>
+<button class="btn-success" style="float:right" @onclick="ResetAll">Reset</button>
+
+@if (creatingNewGame)
+{
+	<EditForm Model="currentGame" OnSubmit="RenderGame">
+		<div>
+			<label for="width">Board width</label>
+			<InputNumber id="width" @bind-Value="GameWidth"></InputNumber>
+		</div>
+		<br />
+		<div>
+			<label for="height">Board height</label>
+			<InputNumber id="height" @bind-Value="GameHeight"></InputNumber>
+		</div>
+		<br />
+		<button type="submit" class="btn btn-success">Create game</button>
+	</EditForm>
+}
+
 <p>
-	@if(firstClick)
+	@if (firstClick)
 	{
 		<div>First Click Done</div>
 	}
 </p>
-<div oncontextmenu="return false;">
-	<div class="minesweeper-game" style="@Size()">
-		<div class="minesweeper-board" style="@Size()" @onclick="FirstClick">
-			@foreach (var cell in currentGame.GameBoard.BoardCells)
-			{
-				if(cell.Revealed)
+
+@if (currentGame.GameBoard.GameCells.Count > 0)
+{
+	<div oncontextmenu="return false;">
+		<div class="minesweeper-game" style="@Size()">
+			<div class="minesweeper-board" style="@Size()" @onclick="FirstClick">
+				@foreach (var cell in currentGame.GameBoard.GameCells)
 				{
-					if(cell.Mined)
+					if (cell.Revealed)
 					{
-						<div class="cell mine-detonated"></div>
+						if (cell.Mined)
+						{
+							<div class="cell mine-detonated"></div>
+						}
+						else
+						{
+							string minesNearby = $"{cell.NearbyMines}";
+							<div class="cell mines-nearby-@minesNearby"></div>
+						}
 					}
 					else
 					{
-						<div class="cell mines-nearby-(@cell.NearbyMines)"></div>
+						if (cell.Flagged)
+						{
+							<div class="cell flagged" @oncontextmenu="cell.RightClick"></div>
+						}
+						else
+						{
+							<div class="cell unrevealed" @onclick="cell.LeftClick" @oncontextmenu="cell.RightClick"></div>
+						}
 					}
 				}
-				else
-				{
-					if(cell.Flagged)
-					{
-						<div class="cell flagged" @oncontextmenu="cell.RightClick"></div>
-					}
-					else
-					{
-						<div class="cell unrevealed" @onclick="cell.LeftClick" @oncontextmenu="cell.RightClick"></div>
-					}
-				}
-			}
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 
 @code {
-	private int gameWidth = 5;
-	private int gameHeight = 5;
+	private bool creatingNewGame = true;
+
+	public int GameWidth { get; set; }
+	public int GameHeight { get; set; }
+
 	private bool firstClick = false;
 
-	private Game currentGame;
+	private Game currentGame = new(0, 0);
 
-	public NewGame()
+	private void RenderGame()
 	{
-		currentGame = new(gameWidth, gameHeight);
+		currentGame = new(GameWidth, GameHeight);
+		creatingNewGame = false;
 	}
 
 	private string Size()
 	{
-		string gameStyle = $"width:{gameWidth}cm; height:{gameHeight}cm";
+		string gameStyle = $"width:{GameWidth}cm; height:{GameHeight}cm";
 		return gameStyle;
 	}
 
-	private void Debugging()
-	{
-		var a = currentGame.GameBoard.BoardCells;
-
-		var STOP = "STOP";
-	}
 	private void FirstClick()
 	{
-		firstClick = true;
+		if(!firstClick)
+		{
+
+			firstClick = true;
+		}
+	}
+
+	private void ResetAll()
+	{
+		creatingNewGame = true;
+		GameWidth = 0;
+		GameHeight = 0;
+		firstClick = false;
+		currentGame.GameBoard.GameCells.Clear();
 	}
 }
