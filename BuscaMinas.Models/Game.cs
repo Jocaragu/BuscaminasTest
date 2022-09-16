@@ -23,4 +23,7 @@ namespace BuscaMinas.Models
         Over,
         Exiting,
     }
+    //easy 9x9 and 15.625%
+    //medium 16x16 and 16.40625%
+    //hard 24x24 and 17.1875%
 }

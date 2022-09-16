@@ -26,12 +26,12 @@
 	}
 </p>
 
-@if (currentGame.GameBoard.GameCells.Count > 0)
+@if (currentGame.GameBoard.BoardCells.Count > 0)
 {
 	<div oncontextmenu="return false;">
 		<div class="minesweeper-game" style="@Size()">
 			<div class="minesweeper-board" style="@Size()" @onclick="FirstClick">
-				@foreach (var cell in currentGame.GameBoard.GameCells)
+				@foreach (var cell in currentGame.GameBoard.BoardCells)
 				{
 					if (cell.Revealed)
 					{
@@ -100,6 +100,6 @@
 		GameWidth = 0;
 		GameHeight = 0;
 		firstClick = false;
-		currentGame.GameBoard.GameCells.Clear();
+		currentGame.GameBoard.BoardCells.Clear();
 	}
 }

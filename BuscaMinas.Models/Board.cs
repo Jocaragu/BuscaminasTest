@@ -11,65 +11,98 @@ namespace BuscaMinas.Models
 {
     public class Board
     {
-        //public event EventHandler<string> GameCellsAddingNewEvent;
+        private bool _boardIsMined = false;
+        public List<Cell> BoardCells { get; set; }
 
-        public BindingList<Cell> GameCells { get; set; }
-        //public List<Cell> BoardCells { get; set; }
         public Board(int width, int height)
         {
-            //BoardCells = BoardingTheCells(width, height);
-            GameCells = BoardingGameCells(width,height);
+            BoardCells = BoardingTheCells(width, height);
         }
 
-        //public List<Cell> BoardingTheCells(int width, int height)
-        //{
-        //    var boardedCells = new List<Cell>();
-        //    for (int i = 0; i < width; i++)
-        //    {
-        //        for (int j = 0; j < height; j++)
-        //        {
-        //            boardedCells.Add(new Cell(i + 1, j + 1));
-        //        }
-        //    }
-        //    return boardedCells;
-        //}
-        public BindingList<Cell> BoardingGameCells(int width, int height)
+        public List<Cell> BoardingTheCells(int width, int height)
         {
-            var boardingGameCells = new BindingList<Cell>();
-            for (int i = 0; i < width; i++)
+            var boardedCells = new List<Cell>();
+            for (int j = 0; j < width; j++)
             {
-                for (int j = 0; j < height; j++)
+                for (int i = 0; i < height; i++)
                 {
-                    Cell cell = new(i + 1, j + 1);
+                    var cell = new Cell(i + 1, j + 1);
                     cell.CellWasRevealed += Cell_CellWasRevealed;
-                    boardingGameCells.Add(cell);
+                    boardedCells.Add(cell);
                 }
             }
-            //boardingGameCells.ListChanged += BoardingGameCells_ListChanged;
-            return boardingGameCells;
+            return boardedCells;
         }
 
-        //private void BoardingGameCells_ListChanged(object? sender, ListChangedEventArgs e)
-        //{
-        //    Console.WriteLine("CHANGE CHANGE CHANGE");
-        //}
         private void Cell_CellWasRevealed(object? sender, CellWasRevealedArgs e)
         {
             var xArg = e.XRevelationValue;
             var yArg = e.YRevelationValue;
-            Console.WriteLine("REVELATION REVELATION REVELATION");
+            if (!_boardIsMined)
+            {
+                MiningTheBoard(xArg, yArg);
+            }
+            RevealPerimeter(xArg, yArg);
         }
 
-        //public void MineTheCells(Cell seed)
-        //{
-        //    for (int i = 0; i < BoardCells.Count; i++)
-        //    {
-        //        var cell = BoardCells[i];
-        //        if (seed.XValue != cell.XValue && seed.YValue != cell.YValue)
-        //        {
-        //            cell.Mined = true;
-        //        }
-        //    }
-        //}
+        private void MiningTheBoard(int x, int y)
+        {
+            var miningPerimeter = DefinePerimeter(x, y);
+            foreach(var boardedCell in BoardCells)
+            {
+                if (!miningPerimeter.Contains(boardedCell))
+                {
+                    boardedCell.Mined = true;
+                }
+            }
+            _boardIsMined = true;
+            NumberingNearbyMines();
+        }
+
+        private void NumberingNearbyMines()
+        {
+            foreach (var scoutingCell in BoardCells)
+            {
+                var perimeter = DefinePerimeter(scoutingCell.XValue, scoutingCell.YValue);
+                foreach(var probedCell in perimeter)
+                {
+                    if(probedCell!=null && probedCell.Mined)
+                    {
+                        scoutingCell.NearbyMines++;
+                    }
+                }
+            }
+        }
+
+        private void RevealPerimeter(int x, int y)
+        {
+            var revealedPerimeter = DefinePerimeter(x, y);
+            foreach(var cellToReveal in BoardCells)
+            {
+                if (revealedPerimeter.Contains(cellToReveal) && !cellToReveal.Revealed && !cellToReveal.Mined && !cellToReveal.Flagged)
+                {
+                    cellToReveal.LeftClick();
+                }
+            }
+        }
+
+        private List<Cell> DefinePerimeter(int centerX, int centerY)
+        {
+            var perimeter = new List<Cell>();
+            var perimeterX = new[] { centerX - 1, centerX, centerX + 1 };
+            var perimeterY = new[] {centerY-1, centerY, centerY + 1 };
+            for (int j = 0; j < perimeterY.Length; j++)
+            {
+                for (int i = 0; i < perimeterX.Length; i++)
+                {
+                    var definedCell = BoardCells.Where(c => c.XValue == perimeterX[i] && c.YValue == perimeterY[j]).FirstOrDefault();
+                    if(definedCell != null)
+                    {
+                        perimeter.Add(definedCell);
+                    }
+                }
+            }
+            return perimeter;
+        }
     }
 }

@@ -10,30 +10,14 @@ namespace BuscaMinas.Models
 {
     public class Cell// : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public int XValue { get; set; }
         public int YValue { get; set; }
         public int NearbyMines { get; set; }
-        //private bool _revealed = false;
-        //public bool Revealed 
-        //{ 
-        //    get 
-        //    {
-        //        return _revealed; 
-        //    }
-        //    set 
-        //    { 
-        //        if(value != _revealed)
-        //        {
-        //            _revealed = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    } 
-        //}
         public bool Revealed { get; set; }
         public bool Mined { get; set; }
         public bool Flagged { get; set; }
-        public bool Questioned { get; set; }
+        //public bool Questioned { get; set; }
         public CellWasRevealedArgs RevealedArgs { get; set; }
         public Cell(int xValue, int yValue)
         {
@@ -57,12 +41,6 @@ namespace BuscaMinas.Models
             }
         }
         public event EventHandler<CellWasRevealedArgs>? CellWasRevealed;
-        //public event PropertyChangedEventHandler? PropertyChanged;
-        //private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
     }
     public class CellWasRevealedArgs : EventArgs
     {
