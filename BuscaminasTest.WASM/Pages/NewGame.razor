@@ -37,7 +37,18 @@
 					{
 						if (cell.Mined)
 						{
-							<div class="cell mine-detonated"></div>
+							if (cell.SteppedOn)
+							{
+								<div class="cell mine-detonated"></div>
+							}
+							else
+							{
+								<div class="cell mine-missed"></div>
+							}
+						}
+						else if (!cell.Mined && !cell.SteppedOn && cell.Flagged)
+						{
+							<div class="cell mine-misflagged"></div>
 						}
 						else
 						{

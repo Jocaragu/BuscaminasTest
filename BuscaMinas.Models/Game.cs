@@ -8,20 +8,32 @@ namespace BuscaMinas.Models
 {
     public class Game
     {
-        public static Gamestate currentstate { get; set; }
+        internal static Gamestate currentstate { get; set; } = Gamestate.Launching;
         public Board GameBoard { get; set; }
         public Game(int width, int height)
         {
             GameBoard = new Board(width, height);
-            currentstate = Gamestate.Launching;
+            GameBoard.MineDetonated += Game_Over;
+            currentstate = Gamestate.Playing;
+        }
+
+        private void Game_Over(object? sender, EventArgs e)
+        {
+            for (int i = 0; i < GameBoard.BoardCells.Count; i++)
+            {
+                var cell = GameBoard.BoardCells[i];
+                {
+                    if()
+                }
+            }
+            currentstate = Gamestate.Over;
         }
     }
-    public enum Gamestate
+    internal enum Gamestate
     {
         Launching,
         Playing,
         Over,
-        Exiting,
     }
     //easy 9x9 and 15.625%
     //medium 16x16 and 16.40625%

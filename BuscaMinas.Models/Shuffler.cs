@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace BuscaMinas.Models
 {
-	public static class Shuffler
+    internal static class Shuffler
 	{
-        private static Random shuffle = new Random();
-        public static void FisherYates<T>(this IList<T> list)
+        internal static Random shuffle = new Random();
+        internal static void FisherYates<T>(this IList<T> list)
         {
             int n = list.Count;
             while (n > 1)

@@ -8,30 +8,33 @@ using System.Threading.Tasks;
 
 namespace BuscaMinas.Models
 {
-    public class Cell// : INotifyPropertyChanged
+    public class Cell
     {
         //public int Id { get; set; }
         public int XValue { get; set; }
         public int YValue { get; set; }
+        public bool Flagged { get; set; } = false;
+        public bool SteppedOn { get; set; } = false;
+        public bool Revealed { get; set; } = false;
+        public bool Mined { get; set; } = false;
         public int NearbyMines { get; set; }
-        public bool Revealed { get; set; }
-        public bool Mined { get; set; }
-        public bool Flagged { get; set; }
+
         //public bool Questioned { get; set; }
-        public Cell(int xValue, int yValue)
+        internal Cell(int xValue, int yValue)
         {
             XValue = xValue;
             YValue = yValue;
         }
         public void LeftClick()
         {
-            ClickedCellArgs ClickArgs = new(this);
-            ClickedCell?.Invoke(this, ClickArgs);
-
-            if (!Revealed && !Flagged)
+            CellWasClickedArgs ClickArgs = new(this);
+            CellWasClicked?.Invoke(this, ClickArgs);
+            if (!SteppedOn)
             {
+                SteppedOn = true;
                 Revealed = true;
             }
+
         }
         public void RightClick()
         {
@@ -40,14 +43,14 @@ namespace BuscaMinas.Models
                 Flagged = !Flagged;
             }
         }
-        public event EventHandler<ClickedCellArgs>? ClickedCell;
+        internal event EventHandler<CellWasClickedArgs>? CellWasClicked;
     }
-    public class ClickedCellArgs : EventArgs
+    internal class CellWasClickedArgs : EventArgs
     {
-        public Cell CellBeingClicked { get; set; }
-        public ClickedCellArgs(Cell cellBeingClicked)
+        internal Cell ClickedCell { get; set; }
+        internal CellWasClickedArgs(Cell cellBeingClicked)
         {
-            CellBeingClicked = cellBeingClicked;
+            ClickedCell = cellBeingClicked;
         }
     }
 }
