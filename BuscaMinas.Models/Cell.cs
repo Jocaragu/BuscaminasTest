@@ -18,38 +18,36 @@ namespace BuscaMinas.Models
         public bool Mined { get; set; }
         public bool Flagged { get; set; }
         //public bool Questioned { get; set; }
-        public CellWasRevealedArgs RevealedArgs { get; set; }
         public Cell(int xValue, int yValue)
         {
             XValue = xValue;
             YValue = yValue;
-            RevealedArgs = new(xValue, yValue);
         }
         public void LeftClick()
         {
-            if(!Revealed && !Flagged)
+            ClickedCellArgs ClickArgs = new(this);
+            ClickedCell?.Invoke(this, ClickArgs);
+
+            if (!Revealed && !Flagged)
             {
                 Revealed = true;
-                CellWasRevealed?.Invoke(this, RevealedArgs);
             }
         }
         public void RightClick()
         {
-            if(!Revealed)
+            if (!Revealed)
             {
                 Flagged = !Flagged;
             }
         }
-        public event EventHandler<CellWasRevealedArgs>? CellWasRevealed;
+        public event EventHandler<ClickedCellArgs>? ClickedCell;
     }
-    public class CellWasRevealedArgs : EventArgs
+    public class ClickedCellArgs : EventArgs
     {
-        public int XRevelationValue { get; set; }
-        public int YRevelationValue { get; set; }
-        public CellWasRevealedArgs(int xEventValue, int yEventValue)
+        public Cell CellBeingClicked { get; set; }
+        public ClickedCellArgs(Cell cellBeingClicked)
         {
-            XRevelationValue = xEventValue;
-            YRevelationValue = yEventValue;
+            CellBeingClicked = cellBeingClicked;
         }
     }
 }

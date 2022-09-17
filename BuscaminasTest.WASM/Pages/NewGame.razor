@@ -2,7 +2,7 @@
 
 <button class="btn-success" style="float:right" @onclick="ResetAll">Reset</button>
 
-@if (creatingNewGame)
+@*@if (creatingNewGame)
 {
 	<EditForm Model="currentGame" OnSubmit="RenderGame">
 		<div>
@@ -17,20 +17,20 @@
 		<br />
 		<button type="submit" class="btn btn-success">Create game</button>
 	</EditForm>
-}
+}*@
 
-<p>
+@*<p>
 	@if (firstClick)
 	{
 		<div>First Click Done</div>
 	}
-</p>
+</p>*@
 
 @if (currentGame.GameBoard.BoardCells.Count > 0)
 {
 	<div oncontextmenu="return false;">
 		<div class="minesweeper-game" style="@Size()">
-			<div class="minesweeper-board" style="@Size()" @onclick="FirstClick">
+			<div class="minesweeper-board" style="@Size()">
 				@foreach (var cell in currentGame.GameBoard.BoardCells)
 				{
 					if (cell.Revealed)
@@ -64,19 +64,25 @@
 
 
 @code {
-	private bool creatingNewGame = true;
+	//private bool creatingNewGame = true;
 
-	public int GameWidth { get; set; }
-	public int GameHeight { get; set; }
+	public int GameWidth { get; set; } = 10;
+	public int GameHeight { get; set; } = 10;
 
-	private bool firstClick = false;
+	//private bool firstClick = false;
 
 	private Game currentGame = new(0, 0);
+
+	protected override async Task OnInitializedAsync()
+	{
+		await Task.Delay(1);
+		RenderGame();
+	}
 
 	private void RenderGame()
 	{
 		currentGame = new(GameWidth, GameHeight);
-		creatingNewGame = false;
+		//creatingNewGame = false;
 	}
 
 	private string Size()
@@ -85,21 +91,22 @@
 		return gameStyle;
 	}
 
-	private void FirstClick()
-	{
-		if(!firstClick)
-		{
+	//private void FirstClick()
+	//{
+	//	if(!firstClick)
+	//	{
 
-			firstClick = true;
-		}
-	}
+	//		firstClick = true;
+	//	}
+	//}
 
 	private void ResetAll()
 	{
-		creatingNewGame = true;
-		GameWidth = 0;
-		GameHeight = 0;
-		firstClick = false;
+		//creatingNewGame = true;
+		//GameWidth = 0;
+		//GameHeight = 0;
+		//firstClick = false;
 		currentGame.GameBoard.BoardCells.Clear();
+		RenderGame();
 	}
 }
