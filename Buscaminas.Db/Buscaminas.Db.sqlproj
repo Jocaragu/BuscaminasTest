@@ -6,7 +6,7 @@
     <Name>Buscaminas.Db</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{22bc5e21-42da-43e2-a7aa-4f3ecb652b09}</ProjectGuid>
+    <ProjectGuid>{513eef5a-9840-4cc8-bad7-52ebed7e823a}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
@@ -58,9 +58,7 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Grid.sql" />
     <Build Include="Participants.sql" />
-    <Build Include="Scoreboard.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Buscaminas.Db.refactorlog" />

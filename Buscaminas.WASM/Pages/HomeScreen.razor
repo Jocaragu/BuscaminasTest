@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject HttpClient Http
+@*@inject HttpClient Http
 @inject NavigationManager NavigationManager
 
 <EditForm Model="currentPlayer" OnSubmit="EnterLobby">
@@ -51,4 +51,4 @@
 	{
 		await Http.PostAsJsonAsync("api/Participants", currentPlayer);
 	}
-}
+}*@
