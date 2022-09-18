@@ -8,13 +8,14 @@ namespace BuscaMinas.Models
 {
     public class Game
     {
-        internal static Gamestate currentstate { get; set; } = Gamestate.Launching;
-        public Board GameBoard { get; set; }
+        public Gamestate Currentstate { get; private set; } = Gamestate.Launching;
+        public Board GameBoard { get; internal set; }
+
         public Game(int width, int height)
         {
             GameBoard = new Board(width, height);
             GameBoard.MineDetonated += Game_Over;
-            currentstate = Gamestate.Playing;
+            Currentstate = Gamestate.Playing;
         }
 
         private void Game_Over(object? sender, EventArgs e)
@@ -22,14 +23,16 @@ namespace BuscaMinas.Models
             for (int i = 0; i < GameBoard.BoardCells.Count; i++)
             {
                 var cell = GameBoard.BoardCells[i];
+                if (cell.Mined & !cell.Flagged || cell.Flagged & !cell.Mined)
                 {
-                    if()
+                    cell.Revealed = true;
                 }
+                cell.locked = true;
             }
-            currentstate = Gamestate.Over;
+            Currentstate = Gamestate.Over;
         }
     }
-    internal enum Gamestate
+    public enum Gamestate
     {
         Launching,
         Playing,

@@ -10,6 +10,7 @@ namespace BuscaMinas.Models
 {
     public class Cell
     {
+        internal bool locked = false;
         //public int Id { get; set; }
         public int XValue { get; set; }
         public int YValue { get; set; }
@@ -27,20 +28,25 @@ namespace BuscaMinas.Models
         }
         public void LeftClick()
         {
-            CellWasClickedArgs ClickArgs = new(this);
-            CellWasClicked?.Invoke(this, ClickArgs);
-            if (!SteppedOn)
+            if (!locked)
             {
-                SteppedOn = true;
-                Revealed = true;
+                CellWasClickedArgs ClickArgs = new(this);
+                CellWasClicked?.Invoke(this, ClickArgs);
+                if (!SteppedOn)
+                {
+                    SteppedOn = true;
+                    Revealed = true;
+                }
             }
-
         }
         public void RightClick()
         {
-            if (!Revealed)
+            if (!locked)
             {
-                Flagged = !Flagged;
+                if (!Revealed)
+                {
+                    Flagged = !Flagged;
+                }
             }
         }
         internal event EventHandler<CellWasClickedArgs>? CellWasClicked;

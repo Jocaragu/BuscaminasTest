@@ -10,5 +10,6 @@ namespace BuscaMinas.Models
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public int HighestScore { get; set; }
     }
 }

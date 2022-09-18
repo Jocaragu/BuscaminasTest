@@ -15,11 +15,10 @@
 }
 
 .cell {
-    min-width: 1cm;
-    min-height: 1cm;
+    min-width: .9999cm;
+    min-height: .9999cm;
     max-width: 1cm;
     max-height: 1cm;
-    font-size: 0px;
 }
 
 .empty{
@@ -42,7 +41,7 @@
     background-position: -3cm 0cm;
 }
 
-.mine-misflagged {
+.misflagged-mine {
     background-position: -4cm 0cm;
 }
 

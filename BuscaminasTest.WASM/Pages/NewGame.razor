@@ -1,123 +1,48 @@
-﻿@page "/"
+﻿@page "/game/{id:int}"
+@inject HttpClient Http
 
-<button class="btn-success" style="float:right" @onclick="ResetAll">Reset</button>
-
-@*@if (creatingNewGame)
+@if(gameRendered)
 {
-	<EditForm Model="currentGame" OnSubmit="RenderGame">
+	<Minesweeper GameWidth="@newGameWidth" GameHeight="@newGameHeight" TheBraveMiner="currentPlayer"></Minesweeper>
+}
+else
+{
+	<EditForm Model="gameRendered" OnSubmit="RenderGame">
 		<div>
 			<label for="width">Board width</label>
-			<InputNumber id="width" @bind-Value="GameWidth"></InputNumber>
+			<InputNumber id="width" @bind-Value="newGameWidth"></InputNumber>
 		</div>
 		<br />
 		<div>
 			<label for="height">Board height</label>
-			<InputNumber id="height" @bind-Value="GameHeight"></InputNumber>
+			<InputNumber id="height" @bind-Value="newGameHeight"></InputNumber>
 		</div>
 		<br />
 		<button type="submit" class="btn btn-success">Create game</button>
 	</EditForm>
-}*@
-
-@*<p>
-	@if (firstClick)
-	{
-		<div>First Click Done</div>
-	}
-</p>*@
-
-@if (currentGame.GameBoard.BoardCells.Count > 0)
-{
-	<div oncontextmenu="return false;">
-		<div class="minesweeper-game" style="@Size()">
-			<div class="minesweeper-board" style="@Size()">
-				@foreach (var cell in currentGame.GameBoard.BoardCells)
-				{
-					if (cell.Revealed)
-					{
-						if (cell.Mined)
-						{
-							if (cell.SteppedOn)
-							{
-								<div class="cell mine-detonated"></div>
-							}
-							else
-							{
-								<div class="cell mine-missed"></div>
-							}
-						}
-						else if (!cell.Mined && !cell.SteppedOn && cell.Flagged)
-						{
-							<div class="cell mine-misflagged"></div>
-						}
-						else
-						{
-							string minesNearby = $"{cell.NearbyMines}";
-							<div class="cell mines-nearby-@minesNearby"></div>
-						}
-					}
-					else
-					{
-						if (cell.Flagged)
-						{
-							<div class="cell flagged" @oncontextmenu="cell.RightClick"></div>
-						}
-						else
-						{
-							<div class="cell unrevealed" @onclick="cell.LeftClick" @oncontextmenu="cell.RightClick"></div>
-						}
-					}
-				}
-			</div>
-		</div>
-	</div>
 }
 
+@code{
+	[Parameter]
+	public int? Id { get; set; }
 
-@code {
-	//private bool creatingNewGame = true;
+	Player currentPlayer = new();
 
-	public int GameWidth { get; set; } = 10;
-	public int GameHeight { get; set; } = 10;
-
-	//private bool firstClick = false;
-
-	private Game currentGame = new(0, 0);
-
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnParametersSetAsync()
 	{
-		await Task.Delay(1);
-		RenderGame();
+		var stablishedCurrentPlayer = await Http.GetFromJsonAsync<Player>($"api/Participants/{Id}");
+		if(stablishedCurrentPlayer != null)
+		{
+			currentPlayer = stablishedCurrentPlayer;
+		}
 	}
 
+	private bool gameRendered = false;
+	private int newGameWidth;
+	private int newGameHeight;
+	
 	private void RenderGame()
 	{
-		currentGame = new(GameWidth, GameHeight);
-		//creatingNewGame = false;
-	}
-
-	private string Size()
-	{
-		string gameStyle = $"width:{GameWidth}cm; height:{GameHeight}cm";
-		return gameStyle;
-	}
-
-	//private void FirstClick()
-	//{
-	//	if(!firstClick)
-	//	{
-
-	//		firstClick = true;
-	//	}
-	//}
-
-	private void ResetAll()
-	{
-		//creatingNewGame = true;
-		//GameWidth = 0;
-		//GameHeight = 0;
-		//firstClick = false;
-		currentGame.GameBoard.BoardCells.Clear();
-		RenderGame();
+		gameRendered = true;
 	}
 }

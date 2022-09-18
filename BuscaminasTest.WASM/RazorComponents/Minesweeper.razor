@@ -1,0 +1,135 @@
+﻿@if (currentGame.Currentstate == Gamestate.Playing)
+{
+	<button class="btn-outline-success" @onmousedown="Blink" @onmouseup="Blink">@chara</button>
+}
+else if (currentGame.Currentstate == Gamestate.Over)
+{
+	RIP();
+	<button class="btn-danger" @onmousedown="Blink" @onmouseup="Blink">@chara</button>
+	<button class="btn-success" style="float:inline-end" @onclick="RenderGame">Try again?</button>
+}
+<p></p>
+@if (currentGame.GameBoard.BoardCells.Count > 0)
+{
+	<div oncontextmenu="return false">
+		<div class="minesweeper-game" style="@Size()">
+			<div class="minesweeper-board" style="@Size()">
+				@foreach (var cell in currentGame.GameBoard.BoardCells)
+				{
+					if (cell.Revealed)
+					{
+						if (cell.Mined)
+						{
+							if (cell.SteppedOn)
+							{
+								<div class="cell mine-detonated" />
+							}
+							else
+							{
+								<div class="cell mine-missed" />
+							}
+						}
+						else if (cell.Flagged)
+						{
+							<div class="cell misflagged-mine" />
+						}
+						else
+						{
+							string minesNearby = $"{cell.NearbyMines}";
+							<div class="cell mines-nearby-@minesNearby" />
+						}
+					}
+					else
+					{
+						if (cell.Flagged)
+						{
+							<div class="cell flagged" @oncontextmenu="cell.RightClick" />
+						}
+						else
+						{
+							<div class="cell unrevealed" @onclick="cell.LeftClick" @oncontextmenu="cell.RightClick" />
+						}
+					}
+				}
+			</div>
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter]
+	[EditorRequired]
+	public Player? TheBraveMiner { get; set; }
+
+	[Parameter]
+	[EditorRequired]
+	public int GameWidth { get; set; }
+
+	[Parameter]
+	[EditorRequired]
+	public int GameHeight { get; set; }
+
+	private Game currentGame = new(0, 0);
+
+	private string chara = string.Empty;
+
+	private bool gameOver = false;
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (GameWidth < 9)
+		{
+			GameWidth = 9;
+		}
+
+		if (GameHeight < 9)
+		{
+			GameHeight = 9;
+		}
+
+		await Task.Delay(1);
+		RenderGame();
+	}
+
+	private void RenderGame()
+	{
+		currentGame = new(GameWidth, GameHeight);
+		gameOver = false;
+		chara = "o_o";
+	}
+
+	private string Size()
+	{
+		string gameStyle = $"width:{GameWidth}cm; height:{GameHeight}cm";
+		return gameStyle;
+	}
+
+	private void Blink()
+	{
+		if (chara == "o_o")
+		{
+			chara = ">_<";
+		}
+		else if (chara == ">_<")
+		{
+			chara = "o_o";
+		}
+		else if (chara == "x_x")
+		{
+			chara = "X_X";
+		}
+		else if (chara == "X_X")
+		{
+			chara = "x_x";
+		}
+	}
+	private void RIP()
+	{
+		if (!gameOver)
+		{
+			chara = "x_x";
+			gameOver = true;
+		}
+	}
+}

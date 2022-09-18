@@ -11,10 +11,10 @@ namespace BuscaMinas.Models
 {
     public class Board
     {
-        private bool _boardIsMined = false;
         private readonly int _width;
         private readonly int _height;
-        public List<Cell> BoardCells { get; set; }
+        private bool _boardIsMined = false;
+        public List<Cell> BoardCells { get; private set; }
 
         public Board(int width, int height)
         {
@@ -40,12 +40,9 @@ namespace BuscaMinas.Models
 
         private void Cell_WasClicked(object? sender, CellWasClickedArgs e)
         {
-            var xArg = e.ClickedCell.XValue;
-            var yArg = e.ClickedCell.YValue;
-            
             if (!_boardIsMined)
             {
-                MiningTheBoard(xArg, yArg);
+                MiningTheBoard(e.ClickedCell.XValue, e.ClickedCell.YValue);
             }
 
             if (e.ClickedCell.Mined)
@@ -53,13 +50,12 @@ namespace BuscaMinas.Models
                 Console.WriteLine("KA BOOM");
                 MineDetonated?.Invoke(this, EventArgs.Empty);
             }
-            else if (e.ClickedCell.NearbyMines < 1)
+            else if (e.ClickedCell.NearbyMines < 1 && !e.ClickedCell.Mined)
             {
-                RevealPerimeter(xArg, yArg);
+                RevealPerimeter(e.ClickedCell.XValue, e.ClickedCell.YValue);
             }
-
-            //Console.WriteLine($"you clicked at {xArg} and {yArg}");
         }
+
         private void MiningTheBoard(int xSeed, int ySeed)
         {
             var safeZone = DefinePerimeter(xSeed, ySeed);
@@ -85,37 +81,22 @@ namespace BuscaMinas.Models
             _boardIsMined = true;
             NumberingNearbyMines();
         }
-        //private void MiningTheBoard(Cell seed)
-        //{
-        //    List<int> potentialMineIndexes = new();
-        //    for (int i = 0; i < BoardCells.Count; i++)
-        //    {
-        //        if (BoardCells[i] != seed)
-        //        {
-        //            potentialMineIndexes.Add(i);
-        //        }
-        //    }
-        //    Shuffler.FisherYates(potentialMineIndexes);
-        //    int maxNumberOfMines = (int)(_width * _height * 0.15);
-        //    for (int i = 0; i < maxNumberOfMines; i++)
-        //    {
-        //        BoardCells[potentialMineIndexes[i]].Mined = true;
-        //    }
-
-        //    _boardIsMined = true;
-        //    NumberingNearbyMines();
-        //}
 
         private void NumberingNearbyMines()
         {
-            foreach (var scoutingCell in BoardCells)
+            for(int i = 0; i < BoardCells.Count; i++)
             {
-                var perimeter = DefinePerimeter(scoutingCell.XValue, scoutingCell.YValue);
-                foreach (var probedCell in perimeter)
+                var scoutingCell = BoardCells[i];
+                if (!scoutingCell.Mined)
                 {
-                    if (probedCell != null && probedCell.Mined)
+                    var perimenter = DefinePerimeter(scoutingCell.XValue, scoutingCell.YValue);
+                    for(int j = 0; j < perimenter.Count; j++)
                     {
-                        scoutingCell.NearbyMines++;
+                        var probedCell = perimenter[j];
+                        if (probedCell.Mined)
+                        {
+                            scoutingCell.NearbyMines++;
+                        }
                     }
                 }
             }
@@ -162,6 +143,6 @@ namespace BuscaMinas.Models
             return perimeter;
         }
 
-        internal event EventHandler MineDetonated;
+        internal event EventHandler? MineDetonated;
     }
 }
