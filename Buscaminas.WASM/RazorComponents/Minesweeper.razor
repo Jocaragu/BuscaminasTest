@@ -12,6 +12,7 @@ else if (currentGame.Currentstate == Gamestate.Over)
 }
 else if (currentGame.Currentstate == Gamestate.Won)
 {
+	
 	YAY();
 	<button class="btn-success" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
@@ -19,7 +20,7 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		You won!, your score is: <b>@currentGame.Score</b>
 	</p>
 	<button class="btn-success" style="float:right" @onclick="SubmitScore">Submit score</button>
-	@scoreSubmission
+	<p>@scoreSubmission</p>
 }
 
 <p></p>
@@ -126,10 +127,13 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		if (TheBraveMiner != null)
 		{
 			TheBraveMiner.HighScore = currentGame.Score;
+
 			var result = await Http.PutAsJsonAsync($"api/Lobby/{TheBraveMiner.Id}", TheBraveMiner);
+
 			if (result.IsSuccessStatusCode)
 			{
 				scoreSubmission = "Score submitted successfully!";
+				await Task.Delay(1);
 			}
 			else
 			{
@@ -148,9 +152,9 @@ else if (currentGame.Currentstate == Gamestate.Won)
 	}
 	private void YAY()
 	{
-		if (!gameOver)
+		if (!gameWon)
 		{
-			chara = "^_^";
+			chara = "n_n";
 			gameWon = true;
 		}
 	}
@@ -172,13 +176,13 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		{
 			chara = "x_x";
 		}
-		else if (chara == "^_^")
+		else if (chara == "n_n")
 		{
 			chara = "^o^";
 		}
 		else if (chara == "^o^")
 		{
-			chara = "^_^";
+			chara = "n_n";
 		}
 	}
 }

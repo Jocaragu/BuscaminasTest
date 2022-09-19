@@ -14,22 +14,29 @@
 @code {
 	Player currentPlayer = new();
 
-	private List<Player>? Lobby;
+	private List<Player> Lobby = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		await SummonTheLobby();
+		var result = await Http.GetFromJsonAsync<List<Player>>("api/Lobby");
+		if(result != null)
+		{
+			Lobby = result;
+		}
 	}
 
 	private async Task EnterLobby()
 	{
-		if (Lobby != null)
+		if (Lobby.Count > 0)
 		{
 			foreach (var listedPlayer in Lobby)
 			{
-				if (currentPlayer.Name != null && listedPlayer.Name != null && listedPlayer.Name.ToLower() == currentPlayer.Name.ToLower())
+				if (currentPlayer.Name != null && listedPlayer.Name != null)
 				{
-					currentPlayer = listedPlayer;
+					if(currentPlayer.Name == listedPlayer.Name)
+					{
+						currentPlayer = listedPlayer;
+					}
 				}
 				else
 				{
@@ -37,7 +44,7 @@
 				}
 			}
 		}
-		else if (Lobby == null || Lobby.Count < 1)
+		else if (Lobby.Count < 1)
 		{
 			await RecruitCurrentPlayer();
 		}
@@ -49,12 +56,7 @@
 
 	protected async Task RecruitCurrentPlayer()
 	{
-		await Http.PostAsJsonAsync("api/Lobby", currentPlayer);
-	}
-
-	protected async Task SummonTheLobby()
-	{
-		var a = await Http.GetFromJsonAsync<List<Player>>("api/Lobby");
 		await Task.Delay(1);
+		//await Http.PostAsJsonAsync("api/Lobby", currentPlayer);
 	}
 }

@@ -42,13 +42,10 @@ public class LobbyRepository
     }
     public async Task UpdatePlayerAsync(Player updatingPlayer)
     {
-        var sqlQuery = "UPDATE Lobby SET highScore=@UpdatedHighScore WHERE id=@UpdatedId";
-        var parameters = new DynamicParameters();
-        parameters.Add("@UpdatedId", updatingPlayer.Id, DbType.Int32);
-        parameters.Add("@UpdatedHighScore", updatingPlayer.HighScore, DbType.Int32);
+        var sqlQuery = "UPDATE Lobby SET highScore=@HighScore WHERE id=@Id";
         using (var connection = _context.Connect())
         {
-            await connection.ExecuteAsync(sqlQuery);
+            await connection.ExecuteAsync(sqlQuery, new {Id = updatingPlayer.Id, HighScore = updatingPlayer.HighScore});
         }
     }
     public async Task DismissPlayerAsync(int id)

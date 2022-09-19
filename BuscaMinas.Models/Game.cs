@@ -22,6 +22,21 @@ namespace BuscaMinas.Models
 
         private void Game_Over(object? sender, EventArgs e)
         {
+            FreezeBoard();
+            Currentstate = Gamestate.Over;
+        }
+
+        private void You_Win(object? sender, AllMinesDetectedArgs e)
+        {
+            FreezeBoard();
+            Score = CurrentScoringAlgorithmn(e.TotalMines, e.TotalCells);
+            Console.WriteLine("You win!");
+            Console.WriteLine($"Your score is: {Score}");
+            Currentstate = Gamestate.Won;
+        }
+
+        private void FreezeBoard()
+        {
             for (int i = 0; i < GameBoard.BoardCells.Count; i++)
             {
                 var cell = GameBoard.BoardCells[i];
@@ -31,15 +46,6 @@ namespace BuscaMinas.Models
                 }
                 cell.locked = true;
             }
-            Currentstate = Gamestate.Over;
-        }
-
-        private void You_Win(object? sender, AllMinesDetectedArgs e)
-        {
-            Score = CurrentScoringAlgorithmn(e.TotalMines, e.TotalCells);
-            Console.WriteLine("You win!");
-            Console.WriteLine($"Your score is: {Score}");
-            Currentstate = Gamestate.Won;
         }
 
         private int CurrentScoringAlgorithmn(int mines, int totalCells)
@@ -50,7 +56,7 @@ namespace BuscaMinas.Models
             decimal x = mines / totalCells;
             decimal xSquared = x * x;
             var y = (a * xSquared) + (b * x) + c;
-            return (int)y * mines;
+            return (int)y * mines + 1;
         }
     }
     public enum Gamestate

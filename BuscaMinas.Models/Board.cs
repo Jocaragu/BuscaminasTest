@@ -87,7 +87,8 @@ namespace BuscaMinas.Models
                 }
             }
             Shuffler.FisherYates(potentialMineIndexes);
-            int maxNumberOfMines = (int)(Width * Height * 0.166);
+            int maxNumberOfMines = 1;
+            //int maxNumberOfMines = (int)(Width * Height * 0.166);
             for (int i = 0; i < maxNumberOfMines; i++)
             {
                 BoardCells[potentialMineIndexes[i]].Mined = true;
