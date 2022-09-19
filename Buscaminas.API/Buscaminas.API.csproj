@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Buscaminas.DAL\Buscaminas.DAL.csproj" />
+    <ProjectReference Include="..\Buscaminas.Db\Buscaminas.Db.sqlproj" />
+    <ProjectReference Include="..\BuscaMinas.Models\BuscaMinas.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -58,7 +58,7 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Participants.sql" />
+    <Build Include="Lobby.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Buscaminas.Db.refactorlog" />

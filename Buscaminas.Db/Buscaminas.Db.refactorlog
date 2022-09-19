@@ -14,4 +14,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="high_score" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b8509f14-44a7-4a83-98ea-980a029eda49" ChangeDateTime="09/19/2022 04:06:55">
+    <Property Name="ElementName" Value="[dbo].[Lobby].[high_score]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Lobby]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="player_high_score" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="00f1dff6-4477-4e00-b539-38dcd895ed44" ChangeDateTime="09/19/2022 05:02:31">
+    <Property Name="ElementName" Value="[dbo].[Lobby].[player_id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Lobby]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fb15c029-441d-4e73-a566-eb662ef25491" ChangeDateTime="09/19/2022 05:02:34">
+    <Property Name="ElementName" Value="[dbo].[Lobby].[player_name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Lobby]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e90dd00d-b1e7-417f-9078-0e72bdf13879" ChangeDateTime="09/19/2022 05:02:43">
+    <Property Name="ElementName" Value="[dbo].[Lobby].[player_high_score]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Lobby]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="highScore" />
+  </Operation>
 </Operations>

@@ -1,5 +1,5 @@
 ﻿@page "/"
-@*@inject HttpClient Http
+@inject HttpClient Http
 @inject NavigationManager NavigationManager
 
 <EditForm Model="currentPlayer" OnSubmit="EnterLobby">
@@ -18,7 +18,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Lobby = await Http.GetFromJsonAsync<List<Player>>("api/Participants");
+		await SummonTheLobby();
 	}
 
 	private async Task EnterLobby()
@@ -49,6 +49,12 @@
 
 	protected async Task RecruitCurrentPlayer()
 	{
-		await Http.PostAsJsonAsync("api/Participants", currentPlayer);
+		await Http.PostAsJsonAsync("api/Lobby", currentPlayer);
 	}
-}*@
+
+	protected async Task SummonTheLobby()
+	{
+		var a = await Http.GetFromJsonAsync<List<Player>>("api/Lobby");
+		await Task.Delay(1);
+	}
+}

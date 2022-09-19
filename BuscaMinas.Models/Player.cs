@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BuscaMinas.Models
 {
@@ -10,6 +6,6 @@ namespace BuscaMinas.Models
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public int HighestScore { get; set; }
+        public int HighScore { get; set; }
     }
 }

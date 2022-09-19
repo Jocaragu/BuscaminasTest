@@ -35,7 +35,7 @@ namespace BuscaMinas.Models
                 if (!SteppedOn)
                 {
                     SteppedOn = true;
-                    Revealed = true;
+                    RevealCell();
                 }
             }
         }
@@ -49,7 +49,13 @@ namespace BuscaMinas.Models
                 }
             }
         }
+        internal void RevealCell()
+        {
+            Revealed = true;
+            CellWasRevealed?.Invoke(this, EventArgs.Empty);
+        }
         internal event EventHandler<CellWasClickedArgs>? CellWasClicked;
+        internal event EventHandler? CellWasRevealed;
     }
     internal class CellWasClickedArgs : EventArgs
     {

@@ -30,7 +30,7 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		var stablishedCurrentPlayer = await Http.GetFromJsonAsync<Player>($"api/Participants/{Id}");
+		var stablishedCurrentPlayer = await Http.GetFromJsonAsync<Player>($"api/Lobby/{Id}");
 		if(stablishedCurrentPlayer != null)
 		{
 			currentPlayer = stablishedCurrentPlayer;

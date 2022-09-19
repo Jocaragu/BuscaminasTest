@@ -1,13 +1,27 @@
-﻿@if (currentGame.Currentstate == Gamestate.Playing)
+﻿@inject HttpClient Http
+
+@if (currentGame.Currentstate == Gamestate.Playing)
 {
-	<button class="btn-outline-success" @onmousedown="Blink" @onmouseup="Blink">@chara</button>
+	<button class="btn-warning" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 }
 else if (currentGame.Currentstate == Gamestate.Over)
 {
 	RIP();
-	<button class="btn-danger" @onmousedown="Blink" @onmouseup="Blink">@chara</button>
-	<button class="btn-success" style="float:inline-end" @onclick="RenderGame">Try again?</button>
+	<button class="btn-danger" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
+	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
 }
+else if (currentGame.Currentstate == Gamestate.Won)
+{
+	YAY();
+	<button class="btn-success" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
+	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
+	<p>
+		You won!, your score is: <b>@currentGame.Score</b>
+	</p>
+	<button class="btn-success" style="float:right" @onclick="SubmitScore">Submit score</button>
+	@scoreSubmission
+}
+
 <p></p>
 @if (currentGame.GameBoard.BoardCells.Count > 0)
 {
@@ -75,6 +89,9 @@ else if (currentGame.Currentstate == Gamestate.Over)
 
 	private bool gameOver = false;
 
+	private bool gameWon = false;
+
+	private string scoreSubmission = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -87,7 +104,6 @@ else if (currentGame.Currentstate == Gamestate.Over)
 		{
 			GameHeight = 9;
 		}
-
 		await Task.Delay(1);
 		RenderGame();
 	}
@@ -105,7 +121,40 @@ else if (currentGame.Currentstate == Gamestate.Over)
 		return gameStyle;
 	}
 
-	private void Blink()
+	private async void SubmitScore()
+	{
+		if (TheBraveMiner != null)
+		{
+			TheBraveMiner.HighScore = currentGame.Score;
+			var result = await Http.PutAsJsonAsync($"api/Lobby/{TheBraveMiner.Id}", TheBraveMiner);
+			if (result.IsSuccessStatusCode)
+			{
+				scoreSubmission = "Score submitted successfully!";
+			}
+			else
+			{
+				scoreSubmission = "Error submitting your score, please try again...";
+			}
+		}
+	}
+
+	private void RIP()
+	{
+		if (!gameOver)
+		{
+			chara = "x_x";
+			gameOver = true;
+		}
+	}
+	private void YAY()
+	{
+		if (!gameOver)
+		{
+			chara = "^_^";
+			gameWon = true;
+		}
+	}
+	private void CharaClick()
 	{
 		if (chara == "o_o")
 		{
@@ -123,13 +172,13 @@ else if (currentGame.Currentstate == Gamestate.Over)
 		{
 			chara = "x_x";
 		}
-	}
-	private void RIP()
-	{
-		if (!gameOver)
+		else if (chara == "^_^")
 		{
-			chara = "x_x";
-			gameOver = true;
+			chara = "^o^";
+		}
+		else if (chara == "^o^")
+		{
+			chara = "^_^";
 		}
 	}
 }

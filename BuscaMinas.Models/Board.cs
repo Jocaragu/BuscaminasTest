@@ -11,16 +11,19 @@ namespace BuscaMinas.Models
 {
     public class Board
     {
-        private readonly int _width;
-        private readonly int _height;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public int Mines { get; private set; }
         private bool _boardIsMined = false;
+        private int _revealedCells = 0;
+
         public List<Cell> BoardCells { get; private set; }
 
         public Board(int width, int height)
         {
-            _width = width;
-            _height = height;
-            BoardCells = BoardingTheCells(_width, _height);
+            Width = width;
+            Height = height;
+            BoardCells = BoardingTheCells(Width, Height);
         }
 
         private List<Cell> BoardingTheCells(int width, int height)
@@ -32,6 +35,7 @@ namespace BuscaMinas.Models
                 {
                     var cell = new Cell(i + 1, j + 1);
                     cell.CellWasClicked += Cell_WasClicked;
+                    cell.CellWasRevealed += Cell_WasRevealed;
                     boardedCells.Add(cell);
                 }
             }
@@ -55,6 +59,17 @@ namespace BuscaMinas.Models
                 RevealPerimeter(e.ClickedCell.XValue, e.ClickedCell.YValue);
             }
         }
+        private void Cell_WasRevealed(object? sender, EventArgs e)
+        {
+            _revealedCells++;
+            var threshold = Width * Height - Mines;
+            if(_revealedCells == threshold)
+            {
+                Console.WriteLine("All mines have been detected!");
+                AllMinesDetectedArgs AllDetectedArgs = new(this);
+                AllMinesDetected?.Invoke(this, AllDetectedArgs);
+            }
+        }
 
         private void MiningTheBoard(int xSeed, int ySeed)
         {
@@ -72,7 +87,7 @@ namespace BuscaMinas.Models
                 }
             }
             Shuffler.FisherYates(potentialMineIndexes);
-            int maxNumberOfMines = (int)(_width * _height * 0.166);
+            int maxNumberOfMines = (int)(Width * Height * 0.166);
             for (int i = 0; i < maxNumberOfMines; i++)
             {
                 BoardCells[potentialMineIndexes[i]].Mined = true;
@@ -84,13 +99,13 @@ namespace BuscaMinas.Models
 
         private void NumberingNearbyMines()
         {
-            for(int i = 0; i < BoardCells.Count; i++)
+            for (int i = 0; i < BoardCells.Count; i++)
             {
                 var scoutingCell = BoardCells[i];
                 if (!scoutingCell.Mined)
                 {
                     var perimenter = DefinePerimeter(scoutingCell.XValue, scoutingCell.YValue);
-                    for(int j = 0; j < perimenter.Count; j++)
+                    for (int j = 0; j < perimenter.Count; j++)
                     {
                         var probedCell = perimenter[j];
                         if (probedCell.Mined)
@@ -111,7 +126,8 @@ namespace BuscaMinas.Models
                 var perimeterCell = perimeterToReveal[i];
                 if (perimeterCell != null && !perimeterCell.Revealed && !perimeterCell.Mined && !perimeterCell.Flagged)
                 {
-                    perimeterCell.Revealed = true;
+                    //perimeterCell.Revealed = true;
+                    perimeterCell.RevealCell();
                     if (perimeterCell.NearbyMines < 1)
                     {
                         revealedEmptyCells.Add(perimeterCell);
@@ -144,5 +160,16 @@ namespace BuscaMinas.Models
         }
 
         internal event EventHandler? MineDetonated;
+        internal event EventHandler<AllMinesDetectedArgs>? AllMinesDetected;
+    }
+    internal class AllMinesDetectedArgs : EventArgs
+    {
+        internal int TotalCells { get; set; }
+        internal int TotalMines { get; set; }
+        internal AllMinesDetectedArgs(Board clearedBoard)
+        {
+            TotalCells = clearedBoard.Width * clearedBoard.Height;
+            TotalMines = clearedBoard.Mines;
+        }
     }
 }
