@@ -2,7 +2,15 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<EditForm Model="currentPlayer" OnSubmit="EnterLobby">
+@if (invalidName)
+{
+	<div>
+		PLEASE ENTER A VALID NAME
+	</div>
+	<br />
+}
+
+<EditForm Model="currentPlayer" OnSubmit="MyNameIs">
 	<div>
 		<label for="currentPlayerName">What is your name?</label>
 		<InputText id="currentPlayerName" @bind-Value="currentPlayer.Name" class="form-control"></InputText>
@@ -11,10 +19,13 @@
 	<button type="submit" class="btn btn-success">Enter</button>
 </EditForm>
 
+
 @code {
 	Player currentPlayer = new();
 
 	private List<Player> Lobby = new();
+
+	private bool invalidName = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -25,38 +36,51 @@
 		}
 	}
 
-	private async Task EnterLobby()
+	private async Task MyNameIs()
 	{
-		if (Lobby.Count > 0)
+		if(currentPlayer.Name == null || currentPlayer.Name == "")
 		{
-			foreach (var listedPlayer in Lobby)
+			invalidName = true;
+			StateHasChanged();
+		}
+		else
+		{
+			invalidName = false;
+			if (Lobby.Count > 0)
 			{
-				if (currentPlayer.Name != null && listedPlayer.Name != null)
+				foreach (var listedPlayer in Lobby)
 				{
-					if(currentPlayer.Name == listedPlayer.Name)
+					if (currentPlayer.Name != null && listedPlayer.Name != null)
 					{
-						currentPlayer = listedPlayer;
+						if (currentPlayer.Name == listedPlayer.Name)
+						{
+							currentPlayer = listedPlayer;
+						}
+						else
+						{
+							await RecruitCurrentPlayer();
+						}
 					}
 				}
-				else
-				{
-					await RecruitCurrentPlayer();
-				}
 			}
+			else if (Lobby.Count < 1)
+			{
+				await RecruitCurrentPlayer();
+			}
+			EnterLobby();
 		}
-		else if (Lobby.Count < 1)
-		{
-			await RecruitCurrentPlayer();
-		}
+	}
 
-		await Task.Delay(1);
-
+	private void EnterLobby()
+	{
 		NavigationManager.NavigateTo($"/game/{currentPlayer.Id}");
 	}
 
 	protected async Task RecruitCurrentPlayer()
 	{
-		await Task.Delay(1);
-		//await Http.PostAsJsonAsync("api/Lobby", currentPlayer);
+		var result = await Http.PostAsJsonAsync("api/Lobby", currentPlayer);
+		var newIdString = await result.Content.ReadAsStringAsync();
+		int newId = int.Parse(newIdString);
+		currentPlayer.Id = newId;
 	}
 }

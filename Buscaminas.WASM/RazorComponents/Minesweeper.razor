@@ -12,7 +12,7 @@ else if (currentGame.Currentstate == Gamestate.Over)
 }
 else if (currentGame.Currentstate == Gamestate.Won)
 {
-	
+
 	YAY();
 	<button class="btn-success" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
@@ -20,10 +20,16 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		You won!, your score is: <b>@currentGame.Score</b>
 	</p>
 	<button class="btn-success" style="float:right" @onclick="SubmitScore">Submit score</button>
-	<p>@scoreSubmission</p>
+	if (scoreSubmission != String.Empty)
+	{
+		<p>
+			@scoreSubmission
+		</p>
+
+	}
 }
 
-<p></p>
+
 @if (currentGame.GameBoard.BoardCells.Count > 0)
 {
 	<div oncontextmenu="return false">
@@ -112,7 +118,9 @@ else if (currentGame.Currentstate == Gamestate.Won)
 	private void RenderGame()
 	{
 		currentGame = new(GameWidth, GameHeight);
+		scoreSubmission = string.Empty;
 		gameOver = false;
+		gameWon = false;
 		chara = "o_o";
 	}
 
@@ -124,6 +132,8 @@ else if (currentGame.Currentstate == Gamestate.Won)
 
 	private async void SubmitScore()
 	{
+		await Task.Delay(1);
+
 		if (TheBraveMiner != null)
 		{
 			TheBraveMiner.HighScore = currentGame.Score;
@@ -133,12 +143,12 @@ else if (currentGame.Currentstate == Gamestate.Won)
 			if (result.IsSuccessStatusCode)
 			{
 				scoreSubmission = "Score submitted successfully!";
-				await Task.Delay(1);
 			}
 			else
 			{
 				scoreSubmission = "Error submitting your score, please try again...";
 			}
+			StateHasChanged();
 		}
 	}
 
@@ -148,6 +158,7 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		{
 			chara = "x_x";
 			gameOver = true;
+			gameWon = false;
 		}
 	}
 	private void YAY()
@@ -156,6 +167,7 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		{
 			chara = "n_n";
 			gameWon = true;
+			gameOver = false;
 		}
 	}
 	private void CharaClick()

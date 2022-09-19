@@ -22,17 +22,20 @@ namespace BuscaMinas.Models
 
         private void Game_Over(object? sender, EventArgs e)
         {
-            FreezeBoard();
             Currentstate = Gamestate.Over;
+            FreezeBoard();
         }
 
         private void You_Win(object? sender, AllMinesDetectedArgs e)
         {
-            FreezeBoard();
-            Score = CurrentScoringAlgorithmn(e.TotalMines, e.TotalCells);
-            Console.WriteLine("You win!");
-            Console.WriteLine($"Your score is: {Score}");
-            Currentstate = Gamestate.Won;
+            if (Currentstate != Gamestate.Over)
+            {
+                FreezeBoard();
+                Score = CurrentScoringAlgorithmn(e.TotalMines, e.TotalCells);
+                Console.WriteLine("You win!");
+                Console.WriteLine($"Your score is: {Score}");
+                Currentstate = Gamestate.Won;
+            }
         }
 
         private void FreezeBoard()
