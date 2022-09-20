@@ -1,32 +1,30 @@
 ﻿@page "/game/{id:int}"
 @inject HttpClient Http
 
-@if(gameRendered)
+@if(currentGameRendered)
 {
-	<Minesweeper GameWidth="@newGameWidth" GameHeight="@newGameHeight" TheBraveMiner="currentPlayer"></Minesweeper>
+	<Minesweeper 
+		TheBraveMiner="currentPlayer" 
+		Lvl="currentLvl">
+	</Minesweeper>
 }
 else
 {
-	<EditForm Model="gameRendered" OnSubmit="RenderGame">
-		<div>
-			<label for="width">Board width</label>
-			<InputNumber id="width" @bind-Value="newGameWidth"></InputNumber>
-		</div>
-		<br />
-		<div>
-			<label for="height">Board height</label>
-			<InputNumber id="height" @bind-Value="newGameHeight"></InputNumber>
-		</div>
-		<br />
-		<button type="submit" class="btn btn-success">Create game</button>
-	</EditForm>
+	<SelectLevel 
+		@bind-Lvl="currentLvl"
+		@bind-SelectionRendered="currentGameRendered">
+	</SelectLevel>
 }
 
 @code{
 	[Parameter]
 	public int? Id { get; set; }
 
-	Player currentPlayer = new();
+	private Player currentPlayer = new();
+
+	private Level currentLvl = new();
+
+	private bool currentGameRendered = false;
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -35,14 +33,5 @@ else
 		{
 			currentPlayer = stablishedCurrentPlayer;
 		}
-	}
-
-	private bool gameRendered = false;
-	private int newGameWidth;
-	private int newGameHeight;
-	
-	private void RenderGame()
-	{
-		gameRendered = true;
 	}
 }

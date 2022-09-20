@@ -1,0 +1,74 @@
+﻿<div>
+	<EditForm Model="Lvl" OnValidSubmit="RenderGame">
+		<label>
+			Choose your level, or create a custom game:
+			<InputSelect @bind-Value="difficulty">
+				<option value="@Difficulty.none" selected>Select your level...</option>
+				<option value="@Difficulty.easy">Beginner</option>
+				<option value="@Difficulty.medium">Intermediate</option>
+				<option value="@Difficulty.hard">Expert</option>
+				<option value="@Difficulty.custom">Custom</option>
+			</InputSelect>
+		</label>
+			@if (difficulty != Difficulty.none)
+			{
+				string space = " ";
+				@space
+				<button type="submit" style="float:inline-end">Submit</button>
+			}
+		<div>
+			@if (difficulty == Difficulty.custom && Lvl != null)
+			{
+				<label>
+					Enter width (Min 5, max 24)
+					<MyInputNumber @bind-Value="Lvl.Width" />
+				</label>
+
+				<br />
+				<label>
+					Enter height (Min 5, max 16)
+					<MyInputNumber @bind-Value="Lvl.Height" />
+				</label>
+
+				<br />
+				<label>
+					Enter mines (default: 1/6 of total)
+					<MyInputNumber @bind-Value="Lvl.Mines" />
+				</label>
+
+				<br />
+			}
+		</div>
+	</EditForm>
+	<br />
+</div>
+
+@code {
+	[Parameter]
+	public Level? Lvl { get; set; }
+	[Parameter]
+	public EventCallback<Level> LvlChanged { get; set; }
+
+	[Parameter]
+	public bool SelectionRendered { get; set; } = false;
+	[Parameter]
+	public EventCallback<bool> SelectionRenderedChanged { get; set; }
+
+	private Difficulty difficulty;
+
+	private async Task RenderGame()
+	{
+		if (difficulty == Difficulty.custom && Lvl != null)
+		{
+			Lvl = new(Lvl);
+			await LvlChanged.InvokeAsync(Lvl);
+		}
+		else if (difficulty != Difficulty.none)
+		{
+			Lvl = new(difficulty);
+			await LvlChanged.InvokeAsync(Lvl);
+		}
+		SelectionRendered = true;
+		await SelectionRenderedChanged.InvokeAsync(SelectionRendered);
+	}
+}

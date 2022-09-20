@@ -12,9 +12,10 @@ namespace BuscaMinas.Models
         public Gamestate Currentstate { get; private set; } = Gamestate.Launching;
         public Board GameBoard { get; internal set; }
         public int Score { get; set; }
-        public Game(int width, int height)
+
+        public Game(int width, int height, int mines)
         {
-            GameBoard = new Board(width, height);
+            GameBoard = new Board(width, height, mines);
             GameBoard.MineDetonated += Game_Over;
             GameBoard.AllMinesDetected += You_Win;
             Currentstate = Gamestate.Playing;
@@ -22,36 +23,46 @@ namespace BuscaMinas.Models
 
         private void Game_Over(object? sender, EventArgs e)
         {
-            Currentstate = Gamestate.Over;
-            FreezeBoard();
+            if(Currentstate!=Gamestate.Won)
+            {
+                Currentstate = Gamestate.Over;
+                FreezeBoard();
+            }
         }
-
         private void You_Win(object? sender, AllMinesDetectedArgs e)
         {
-            if (Currentstate != Gamestate.Over)
+            if(Currentstate != Gamestate.Over)
             {
-                FreezeBoard();
-                Score = CurrentScoringAlgorithmn(e.TotalMines, e.TotalCells);
+                Score = ScoringAlgorithmn(e.TotalMines, e.TotalCells);
                 Console.WriteLine("You win!");
                 Console.WriteLine($"Your score is: {Score}");
                 Currentstate = Gamestate.Won;
+                FreezeBoard();
             }
         }
-
         private void FreezeBoard()
         {
             for (int i = 0; i < GameBoard.BoardCells.Count; i++)
             {
                 var cell = GameBoard.BoardCells[i];
-                if (cell.Mined & !cell.Flagged || cell.Flagged & !cell.Mined)
+                if (Currentstate == Gamestate.Over)
                 {
-                    cell.Revealed = true;
+                    if (cell.Mined & !cell.Flagged || cell.Flagged & !cell.Mined)
+                    {
+                        cell.Revealed = true;
+                    }
+                }
+                else if (Currentstate == Gamestate.Won)
+                {
+                    if (cell.Mined)
+                    {
+                        cell.Flagged = true;
+                    }
                 }
                 cell.locked = true;
             }
         }
-
-        private int CurrentScoringAlgorithmn(int mines, int totalCells)
+        private int ScoringAlgorithmn(int mines, int totalCells)
         {
             decimal a = -1;
             decimal b = 1;

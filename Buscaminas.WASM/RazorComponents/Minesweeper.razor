@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 @if (currentGame.Currentstate == Gamestate.Playing)
 {
@@ -12,7 +13,6 @@ else if (currentGame.Currentstate == Gamestate.Over)
 }
 else if (currentGame.Currentstate == Gamestate.Won)
 {
-
 	YAY();
 	<button class="btn-success" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
@@ -20,15 +20,8 @@ else if (currentGame.Currentstate == Gamestate.Won)
 		You won!, your score is: <b>@currentGame.Score</b>
 	</p>
 	<button class="btn-success" style="float:right" @onclick="SubmitScore">Submit score</button>
-	if (scoreSubmission != String.Empty)
-	{
-		<p>
-			@scoreSubmission
-		</p>
-
-	}
+	<p>@scoreSubmission</p>
 }
-
 
 @if (currentGame.GameBoard.BoardCells.Count > 0)
 {
@@ -84,90 +77,74 @@ else if (currentGame.Currentstate == Gamestate.Won)
 
 	[Parameter]
 	[EditorRequired]
-	public int GameWidth { get; set; }
+	public Level Lvl { get; set; } = new();
 
-	[Parameter]
-	[EditorRequired]
-	public int GameHeight { get; set; }
-
-	private Game currentGame = new(0, 0);
-
+	private Game currentGame = new(0, 0, 0);
 	private string chara = string.Empty;
-
 	private bool gameOver = false;
-
 	private bool gameWon = false;
-
 	private string scoreSubmission = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		if (GameWidth < 9)
-		{
-			GameWidth = 9;
-		}
-
-		if (GameHeight < 9)
-		{
-			GameHeight = 9;
-		}
 		await Task.Delay(1);
 		RenderGame();
 	}
 
 	private void RenderGame()
 	{
-		currentGame = new(GameWidth, GameHeight);
-		scoreSubmission = string.Empty;
+		currentGame = new(Lvl.Width, Lvl.Height, Lvl.Mines);
 		gameOver = false;
 		gameWon = false;
 		chara = "o_o";
 	}
 
+	private void ChangeGameMode()
+	{
+		NavigationManager.NavigateTo($"/game/{TheBraveMiner?.Id}");
+	}
+
 	private string Size()
 	{
-		string gameStyle = $"width:{GameWidth}cm; height:{GameHeight}cm";
+		string gameStyle = $"width:{Lvl.Width}cm; height:{Lvl.Height}cm";
 		return gameStyle;
 	}
 
 	private async void SubmitScore()
 	{
-		await Task.Delay(1);
-
 		if (TheBraveMiner != null)
 		{
 			TheBraveMiner.HighScore = currentGame.Score;
 
 			var result = await Http.PutAsJsonAsync($"api/Lobby/{TheBraveMiner.Id}", TheBraveMiner);
-
+			await Task.Delay(1);
 			if (result.IsSuccessStatusCode)
 			{
 				scoreSubmission = "Score submitted successfully!";
+				StateHasChanged();
 			}
 			else
 			{
 				scoreSubmission = "Error submitting your score, please try again...";
+				StateHasChanged();
 			}
-			StateHasChanged();
 		}
 	}
 
 	private void RIP()
 	{
-		if (!gameOver)
+		if (!gameOver && !gameWon)
 		{
 			chara = "x_x";
 			gameOver = true;
-			gameWon = false;
 		}
 	}
 	private void YAY()
 	{
-		if (!gameWon)
+		if (!gameWon && !gameOver)
 		{
 			chara = "n_n";
 			gameWon = true;
-			gameOver = false;
 		}
 	}
 	private void CharaClick()

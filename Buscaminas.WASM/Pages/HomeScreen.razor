@@ -10,7 +10,7 @@
 	<br />
 }
 
-<EditForm Model="currentPlayer" OnSubmit="MyNameIs">
+<EditForm Model="currentPlayer" OnSubmit="EnterLobby">
 	<div>
 		<label for="currentPlayerName">What is your name?</label>
 		<InputText id="currentPlayerName" @bind-Value="currentPlayer.Name" class="form-control"></InputText>
@@ -30,49 +30,23 @@
 	protected override async Task OnInitializedAsync()
 	{
 		var result = await Http.GetFromJsonAsync<List<Player>>("api/Lobby");
-		if(result != null)
+		if (result != null)
 		{
 			Lobby = result;
 		}
 	}
 
-	private async Task MyNameIs()
+	private async Task EnterLobby()
 	{
-		if(currentPlayer.Name == null || currentPlayer.Name == "")
+		if (Lobby.Exists(p => p.Name == currentPlayer.Name))
 		{
-			invalidName = true;
-			StateHasChanged();
+			currentPlayer = Lobby.First(p => p.Name == currentPlayer.Name);
 		}
 		else
 		{
-			invalidName = false;
-			if (Lobby.Count > 0)
-			{
-				foreach (var listedPlayer in Lobby)
-				{
-					if (currentPlayer.Name != null && listedPlayer.Name != null)
-					{
-						if (currentPlayer.Name == listedPlayer.Name)
-						{
-							currentPlayer = listedPlayer;
-						}
-						else
-						{
-							await RecruitCurrentPlayer();
-						}
-					}
-				}
-			}
-			else if (Lobby.Count < 1)
-			{
-				await RecruitCurrentPlayer();
-			}
-			EnterLobby();
+			await RecruitCurrentPlayer();
 		}
-	}
 
-	private void EnterLobby()
-	{
 		NavigationManager.NavigateTo($"/game/{currentPlayer.Id}");
 	}
 
