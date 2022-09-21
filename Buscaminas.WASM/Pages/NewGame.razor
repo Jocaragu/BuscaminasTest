@@ -1,35 +1,35 @@
 ﻿@page "/game/{id:int}"
 @inject HttpClient Http
 
-@if(currentGameRendered)
+@if (currentGameRendered)
 {
-	<Minesweeper 
-		TheBraveMiner="currentPlayer" 
-		Lvl="currentLvl">
+	<Minesweeper TheBraveMiner="currentPlayer"
+			 Lvl="CurrentLvl">
 	</Minesweeper>
 }
 else
 {
-	<SelectLevel 
-		@bind-Lvl="currentLvl"
-		@bind-SelectionRendered="currentGameRendered">
+	<SelectLevel @bind-Lvl="CurrentLvl"
+			 @bind-SelectionRendered="currentGameRendered">
 	</SelectLevel>
 }
 
-@code{
+@code {
 	[Parameter]
 	public int? Id { get; set; }
 
+	public Level CurrentLvl { get; set; } = new();
+
 	private Player currentPlayer = new();
 
-	private Level currentLvl = new();
+	//private Level? currentLvl;
 
 	private bool currentGameRendered = false;
 
 	protected override async Task OnParametersSetAsync()
 	{
 		var stablishedCurrentPlayer = await Http.GetFromJsonAsync<Player>($"api/Lobby/{Id}");
-		if(stablishedCurrentPlayer != null)
+		if (stablishedCurrentPlayer != null)
 		{
 			currentPlayer = stablishedCurrentPlayer;
 		}

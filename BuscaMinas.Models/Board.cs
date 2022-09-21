@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BuscaMinas.Models
+﻿namespace BuscaMinas.Models
 {
     public class Board
     {
         private bool _boardIsMined = false;
+        //private int PotentialMines;
         private int _revealedCells;
         private int threshold;
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public int Mines { get; private set; }
-        public List<Cell> Cells { get; private set; } = new();
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Mines { get; set; }
+        public int PotentialMines { get; set; }
+        public List<Cell> Cells { get; internal set; }
 
-        public Board(int width, int height, int mines)
+        public Board(int inWidth, int inHeight, int inMines)
         {
-            Width = width;
-            Height = height;
-            Mines = mines;
+            Width = inWidth;
+            Height = inHeight;
+            Mines = inMines;
+            PotentialMines = inMines;
             //Cells = BoardingTheCells(Width, Height);
-            Cells = Operator.Define(this);
+            Cells = Operator.Define(this, inWidth, inHeight);
             threshold = (Width * Height) - Mines;
         }
         //private List<Cell> BoardingTheCells(int width, int height)
@@ -64,17 +59,25 @@ namespace BuscaMinas.Models
                 Operator.Reveal(this, e.ClickedCell);
             }
         }
+        internal void Cell_FlagToggled(object? sender, CellFlagToggledArgs e)
+        {
+            if (e.cellToggled.Flagged == true)
+            {
+                PotentialMines--;
+            }
+            else if(e.cellToggled.Flagged == false)
+            {
+                PotentialMines++;
+            }
+        }
         internal void Cell_WasRevealed(object? sender, EventArgs e)
         {
+            _revealedCells++;
             if (_revealedCells == threshold)
             {
                 Console.WriteLine("All mines have been detected!");
                 AllMinesDetectedArgs AllDetectedArgs = new(this);
                 AllMinesDetected?.Invoke(this, AllDetectedArgs);
-            }
-            else
-            {
-                _revealedCells++;
             }
         }
         //private void MiningTheBoard(int xSeed, int ySeed)
@@ -166,8 +169,8 @@ namespace BuscaMinas.Models
     }
     internal class AllMinesDetectedArgs : EventArgs
     {
-        internal int TotalCells { get; set; }
-        internal int TotalMines { get; set; }
+        internal int TotalCells { get; }
+        internal int TotalMines { get;}
         internal AllMinesDetectedArgs(Board clearedBoard)
         {
             TotalCells = clearedBoard.Width * clearedBoard.Height;

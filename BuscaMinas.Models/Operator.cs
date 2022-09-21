@@ -1,42 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BuscaMinas.Models
+﻿namespace BuscaMinas.Models
 {
     internal static class Operator
     {
-        internal static List<Cell> Define(Board definingBoard)
+        internal static List<Cell> Define(Board definingBoard, int width, int height)
         {
-            for (int j = 0; j < definingBoard.Height; j++)
+            var definedCells = new List<Cell>();
+            for (int j = 0; j < width; j++)
             {
-                for (int i = 0; i < definingBoard.Width; i++)
+                for (int i = 0; i < height; i++)
                 {
-                    var cell = new Cell(i + 1, j + 1);
-                    cell.CellWasClicked += definingBoard.Cell_WasClicked;
-                    cell.CellWasRevealed += definingBoard.Cell_WasRevealed;
-                    definingBoard.Cells.Add(cell);
+                    var definedCell = new Cell(i + 1, j + 1);
+                    definedCell.CellWasClicked += definingBoard.Cell_WasClicked;
+                    definedCell.CellWasRevealed += definingBoard.Cell_WasRevealed;
+                    definedCell.CellFlagToggled += definingBoard.Cell_FlagToggled;
+                    definedCells.Add(definedCell);
                 }
             }
-            return definingBoard.Cells;
+            return definedCells;
         }
         internal static List<Cell> Probe(Board probingBoard, Cell scout)
         {
-            var perimeterX = new[] { scout.XValue - 1, scout.XValue, scout.XValue + 1 };
-            var perimeterY = new[] { scout.YValue - 1, scout.YValue, scout.YValue + 1 };
+            int[] perimeterX = new[] { scout.XValue - 1, scout.XValue, scout.XValue + 1 };
+            int[] perimeterY = new[] { scout.YValue - 1, scout.YValue, scout.YValue + 1 };
             var perimeter = new List<Cell>();
             for (int j = 0; j < perimeterY.Length; j++)
             {
                 for (int i = 0; i < perimeterX.Length; i++)
                 {
-                    var definedCell = probingBoard.Cells.Where(c => c.XValue == perimeterX[i] && c.YValue == perimeterY[j]).First();
-                    perimeter.Add(definedCell);
+                    var definedCell = probingBoard.Cells.Find(c => c.XValue == perimeterX[i] && c.YValue == perimeterY[j]);
+                    if (definedCell != null)
+                    {
+                        perimeter.Add(definedCell);
+                    }
                 }
             }
             return perimeter;
         }
+
+        //internal static List<Cell> Arm(Board armingBoard, Cell seed)//Dummy for debug
+        //{
+        //    var safeZone = Probe(armingBoard, seed);
+        //    List<int> potentialMineIndexes = new();
+        //    for (int i = 0; i < armingBoard.Cells.Count; i++)
+        //    {
+        //        //if (Cells[i] != seed)
+        //        //{
+        //        //    potentialMineIndexes.Add(i);
+        //        //}
+        //        if (!safeZone.Contains(armingBoard.Cells[i]))//this approach ensures a bigger initial opening
+        //        {
+        //            potentialMineIndexes.Add(i);
+        //        }
+        //    }
+        //    //Shuffler.FisherYates(potentialMineIndexes);
+        //    for (int i = 0; i < armingBoard.Mines; i++)
+        //    {
+        //        armingBoard.Cells[potentialMineIndexes[i+1]].Mined = true;
+        //    }
+        //    return armingBoard.Cells;
+        //}
+
         internal static List<Cell> Arm(Board armingBoard, Cell seed)
         {
             var safeZone = Probe(armingBoard, seed);
@@ -95,7 +118,7 @@ namespace BuscaMinas.Models
                     }
                 }
             }
-            for(int i = 0; i < revealedEmptyCells.Count; i++)
+            for (int i = 0; i < revealedEmptyCells.Count; i++)
             {
                 var revealedCell = revealedEmptyCells[i];
                 Reveal(revealingBoard, revealedCell);

@@ -1,29 +1,33 @@
 ﻿@inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-@if (currentGame.Currentstate == Gamestate.Playing)
+<div >
+	Mines potentially remaining: @currentGame?.GameBoard.PotentialMines
+</div>
+
+@if (currentGame?.Currentstate == Gamestate.Playing)
 {
 	<button class="btn-warning" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 }
-else if (currentGame.Currentstate == Gamestate.Over)
+else if (currentGame?.Currentstate == Gamestate.Over)
 {
 	RIP();
 	<button class="btn-danger" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
 	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
 }
-else if (currentGame.Currentstate == Gamestate.Won)
+else if (currentGame?.Currentstate == Gamestate.Won)
 {
 	YAY();
 	<button class="btn-success" @onmousedown="CharaClick" @onmouseup="CharaClick">@chara</button>
-	<button class="btn-info" style="float:inline-end" @onclick="RenderGame">Try again?</button>
-	<p>
+	<button class="btn-info" @onclick="RenderGame">Try again?</button>
+	<button class="btn-success" @onclick="SubmitScore">Submit score</button>
+	<a >
 		You won!, your score is: <b>@currentGame.Score</b>
-	</p>
-	<button class="btn-success" style="float:right" @onclick="SubmitScore">Submit score</button>
+	</a>
 	<p>@scoreSubmission</p>
 }
 
-@if (currentGame.GameBoard.Cells.Count > 0)
+@if (currentGame?.GameBoard.Cells.Count > 0)
 {
 	<div oncontextmenu="return false">
 		<div class="minesweeper-game" style="@Size()">
@@ -77,9 +81,9 @@ else if (currentGame.Currentstate == Gamestate.Won)
 
 	[Parameter]
 	[EditorRequired]
-	public Level Lvl { get; set; } = new();
+	public Level? Lvl { get; set; }
 
-	private Game currentGame = new(0, 0, 0);
+	private Game? currentGame;
 	private string chara = string.Empty;
 	private bool gameOver = false;
 	private bool gameWon = false;
@@ -93,10 +97,13 @@ else if (currentGame.Currentstate == Gamestate.Won)
 
 	private void RenderGame()
 	{
-		currentGame = new(Lvl.Width, Lvl.Height, Lvl.Mines);
-		gameOver = false;
-		gameWon = false;
-		chara = "o_o";
+		if(Lvl!=null)
+		{
+			currentGame = new(Lvl.Width, Lvl.Height, Lvl.Mines);
+			gameOver = false;
+			gameWon = false;
+			chara = "o_o";
+		}
 	}
 
 	private void ChangeGameMode()
@@ -106,18 +113,17 @@ else if (currentGame.Currentstate == Gamestate.Won)
 
 	private string Size()
 	{
-		string gameStyle = $"width:{Lvl.Width}cm; height:{Lvl.Height}cm";
+		string gameStyle = $"width:{Lvl?.Width}cm; height:{Lvl?.Height}cm";
 		return gameStyle;
 	}
 
 	private async void SubmitScore()
 	{
-		if (TheBraveMiner != null)
+		if (TheBraveMiner != null && currentGame != null)
 		{
 			TheBraveMiner.HighScore = currentGame.Score;
 
 			var result = await Http.PutAsJsonAsync($"api/Lobby/{TheBraveMiner.Id}", TheBraveMiner);
-			await Task.Delay(1);
 			if (result.IsSuccessStatusCode)
 			{
 				scoreSubmission = "Score submitted successfully!";
@@ -139,13 +145,15 @@ else if (currentGame.Currentstate == Gamestate.Won)
 			gameOver = true;
 		}
 	}
-	private void YAY()
+
+	private async void YAY()
 	{
 		if (!gameWon && !gameOver)
 		{
 			chara = "n_n";
 			gameWon = true;
 		}
+		await Task.Delay(1);
 	}
 	private void CharaClick()
 	{

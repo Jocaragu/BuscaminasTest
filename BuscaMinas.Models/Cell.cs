@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BuscaMinas.Models
+﻿namespace BuscaMinas.Models
 {
     public class Cell
     {
@@ -46,16 +38,22 @@ namespace BuscaMinas.Models
                 if (!Revealed)
                 {
                     Flagged = !Flagged;
+                    CellFlagToggledArgs ToggleArgs = new(this);
+                    CellFlagToggled?.Invoke(this, ToggleArgs);
                 }
             }
         }
         internal void RevealCell()
         {
-            Revealed = true;
-            CellWasRevealed?.Invoke(this, EventArgs.Empty);
+            if (!Revealed)
+            {
+                Revealed = true;
+                CellWasRevealed?.Invoke(this, EventArgs.Empty);
+            }
         }
         internal event EventHandler<CellWasClickedArgs>? CellWasClicked;
         internal event EventHandler? CellWasRevealed;
+        internal event EventHandler<CellFlagToggledArgs>? CellFlagToggled;
     }
     internal class CellWasClickedArgs : EventArgs
     {
@@ -63,6 +61,14 @@ namespace BuscaMinas.Models
         internal CellWasClickedArgs(Cell cellBeingClicked)
         {
             ClickedCell = cellBeingClicked;
+        }
+    }
+    internal class CellFlagToggledArgs : EventArgs
+    {
+        internal Cell cellToggled { get; set; }
+        internal CellFlagToggledArgs(Cell cellBeingToggled)
+        {
+            cellToggled = cellBeingToggled;
         }
     }
 }
