@@ -42,9 +42,9 @@ namespace BuscaMinas.Models
         }
         private void FreezeBoard()
         {
-            for (int i = 0; i < GameBoard.BoardCells.Count; i++)
+            for (int i = 0; i < GameBoard.Cells.Count; i++)
             {
-                var cell = GameBoard.BoardCells[i];
+                var cell = GameBoard.Cells[i];
                 if (Currentstate == Gamestate.Over)
                 {
                     if (cell.Mined & !cell.Flagged || cell.Flagged & !cell.Mined)

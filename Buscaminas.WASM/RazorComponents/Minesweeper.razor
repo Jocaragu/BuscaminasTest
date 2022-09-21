@@ -23,12 +23,12 @@ else if (currentGame.Currentstate == Gamestate.Won)
 	<p>@scoreSubmission</p>
 }
 
-@if (currentGame.GameBoard.BoardCells.Count > 0)
+@if (currentGame.GameBoard.Cells.Count > 0)
 {
 	<div oncontextmenu="return false">
 		<div class="minesweeper-game" style="@Size()">
 			<div class="minesweeper-board" style="@Size()">
-				@foreach (var cell in currentGame.GameBoard.BoardCells)
+				@foreach (var cell in currentGame.GameBoard.Cells)
 				{
 					if (cell.Revealed)
 					{
